@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS users (
-    "id" INTEGER PRIMARY KEY AUTOINCREMENT
-    "principal" NOT NULL UNIQUE varchar (255)
-)

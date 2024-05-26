@@ -15,12 +15,6 @@ const app = express();
 
 app.use(express.json());
 
-// app.post("/user", (req, res) => {
-//   const body = req.body;
-
-//   return res.json(req.body);
-// });
-
 app.post("/note/:principal", async (req, res) => {
   const params = req.params;
   const _notes = notes.get(params.principal).Some;
@@ -39,7 +33,7 @@ app.post("/note/:principal", async (req, res) => {
   console.log({ vetkd });
   try {
     const key = await vetkd.vetkd_public_key({
-      canister_id: [Principal.fromHex("br5f7-7uaaa-aaaaa-qaaca-ca")],
+      canister_id: [Principal.fromText("br5f7-7uaaa-aaaaa-qaaca-ca")],
       derivation_path: [textEncoder.encode("symmetric_key")],
       key_id: {
         name: "test_key",
@@ -57,18 +51,13 @@ app.post("/note/:principal", async (req, res) => {
 
 app.post("/note", async (req, res) => {
   const body = req.body;
-  const canister = Canister({});
-
-  const vetkdCanister = canister(
-    Principal.fromHex("br5f7-7uaaa-aaaaa-qaaca-cai")
-  );
 
   const getNotes = notes.get(body.principal).Some;
   const notesToSave = { title: body.title, content: body.content };
   if (getNotes?.length > 0)
     notes.insert(body.principal, [...getNotes, notesToSave]);
   else notes.insert(body.principal, [notesToSave]);
-  return res.json({ notesToSave, vetkdCanister });
+  return res.json({ notesToSave });
 });
 
 app.listen();
